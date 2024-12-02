@@ -5,17 +5,25 @@ import kotlin.math.abs
 class Day01 {
 
     fun partOne(input: List<String>): Int {
-        val (list1, list2) = input.map(this::parseLine).unzip()
-        val sorted1 = list1.sorted()
-        val sorted2 = list2.sorted()
-        val zipped = sorted1.zip(sorted2)
+        val (list1, list2) = parseLists(input)
+        val sortedZipped = list1.sorted().zip(list2.sorted())
 
-        return zipped.sumOf { abs(it.first - it.second) }
+        return sortedZipped.sumOf { abs(it.first - it.second) }
     }
 
     fun partTwo(input: List<String>): Int {
-        return 1
+        val (list1, list2) = parseLists(input)
+        val occurrences = list2.groupingBy { it }.eachCount()
+
+        return list1.sumOf { calculateSimilarityScore(it, occurrences) }
     }
+
+    private fun calculateSimilarityScore(locationId: Int, idOccurrences: Map<Int, Int>): Int {
+        val occurrences = idOccurrences[locationId] ?: 0
+        return locationId * occurrences
+    }
+
+    private fun parseLists(input: List<String>) = input.map(this::parseLine).unzip()
 
     private fun parseLine(line: String): Pair<Int, Int> {
         val parts = line.split("\\s+".toRegex())

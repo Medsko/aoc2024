@@ -27,14 +27,14 @@ class Day01Test {
     fun `Example part 2`() {
         val answer = subject.partTwo(getTestInputForDay(1))
         println("Example answer to part two: $answer")
-        assertEquals(0, answer)
+        assertEquals(31, answer)
     }
 
     @Test
     fun `Answer part 2`() {
         val answer = subject.partTwo(getRealInputForDay(1))
         println("Answer to part two: $answer")
-        assertEquals(0, answer)
+        assertEquals(24869388, answer)
     }
 
 }
