@@ -1,3 +1,4 @@
+package nl.medsko.util
 
 fun printGrid(grid: List<CharArray>, positions: MutableList<Pair<Int, Int>>) {
     val red = "\u001b[31m"
