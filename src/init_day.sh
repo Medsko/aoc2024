@@ -97,4 +97,5 @@ input_file_2="$INPUT_RESOURCES_DIR/example/day${FORMATTED_DAY}.txt"
 create_input_file "$input_file_1"
 create_input_file "$input_file_2"
 
-# TODO: add to git
+# Add created files to git
+git add "$MAIN_KOTLIN_DIR/Day${FORMATTED_DAY}.kt" "$TEST_KOTLIN_DIR/Day${FORMATTED_DAY}Test.kt" "$input_file_1" "$input_file_2"
