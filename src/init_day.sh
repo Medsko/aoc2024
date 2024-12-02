@@ -1,69 +1,98 @@
 #!/bin/zsh
 
-SRC_DIR=/home/medsko/IdeaProjects/aoc/aoc2024/src/
-MAIN_KT_DIR="${SRC_DIR}main/kotlin/nl/medsko"
-TEST_DIR="${SRC_DIR}test/kotlin/nl/medsko"
-INPUT_DIR="${SRC_DIR}test/resources"
+# Constants for directory paths
+SOURCE_DIR="/home/medsko/IdeaProjects/aoc/aoc2024/src"
+MAIN_KOTLIN_DIR="${SOURCE_DIR}/main/kotlin/nl/medsko"
+TEST_KOTLIN_DIR="${SOURCE_DIR}/test/kotlin/nl/medsko"
+INPUT_RESOURCES_DIR="${SOURCE_DIR}/test/resources"
 
-# Check if at least one argument is passed
+create_kotlin_file() {
+  local file_path=$1
+  local content=$2
+  echo -e "$content" > "$file_path"
+  echo "$file_path created."
+}
+
+create_input_file() {
+  local file_path=$1
+  touch "$file_path"
+  echo "$file_path touched."
+}
+
+# Check argument
 if [ $# -eq 0 ]; then
   echo "No arguments provided."
   exit 2
 fi
 
-DAY=$1
-
-if [[ ! $DAY =~ ^[0-9]+$ ]]; then
-  echo "The given '$DAY' is not a digit. Exiting without creating files, with code 2, which, FYI, indicates incorrect usage."
+DAY_NUMBER=$1
+if [[ ! $DAY_NUMBER =~ ^[0-9]+$ ]]; then
+  echo "The given '$DAY_NUMBER' is not a digit. Exiting without creating files, with code 2, which, FYI, indicates incorrect usage."
   exit 2
 fi
 
-echo "Creating empty files for day $DAY"
+FORMATTED_DAY=$(printf "%02d" "$DAY_NUMBER")
+echo "Creating empty files for day $FORMATTED_DAY"
 
-DAY_STRING="$DAY"
+kotlin_content="package nl.medsko
 
-if [[ $DAY -lt 10 ]]; then
-  DAY_STRING="0${DAY}"
-fi
+class Day${FORMATTED_DAY} {
 
-echo "package nl.medsko\n\nclass Day${DAY_STRING} {\n" > "$MAIN_KT_DIR/Day${DAY_STRING}.kt"
-echo "    fun partOne(input: List<String>): Int {\n        return 1\n    }\n" >> "$MAIN_KT_DIR/Day${DAY_STRING}.kt"
-echo "    fun partTwo(input: List<String>): Int {\n        return 1\n    }\n" >> "$MAIN_KT_DIR/Day${DAY_STRING}.kt"
-echo "}" >> "$MAIN_KT_DIR/Day${DAY_STRING}.kt"
+    fun partOne(input: List<String>): Int {
+        return 1
+    }
 
-touch "$INPUT_DIR/day${DAY_STRING}.txt"
-touch "$INPUT_DIR/example/day${DAY_STRING}.txt"
+    fun partTwo(input: List<String>): Int {
+        return 1
+    }
 
-# TODO: import util function (after move to package
-echo "package nl.medsko\n\nimport org.junit.jupiter.api.Assertions.assertEquals\nimport org.junit.jupiter.api.Test\n\nclass Day${DAY_STRING}Test {\n" > "$TEST_DIR/Day${DAY_STRING}Test.kt"
-echo "    private val subject = Day${DAY_STRING}()\n" >> "$TEST_DIR/Day${DAY_STRING}Test.kt"
+}"
 
-echo "    @Test\n    fun \`Example part 1\`() {" >> "$TEST_DIR/Day${DAY_STRING}Test.kt"
-echo "        val answer = subject.partOne(getTestInputForDay(${DAY}))" >> "$TEST_DIR/Day${DAY_STRING}Test.kt"
-echo "        println(\"Example answer to part one: \$answer\")" >> "$TEST_DIR/Day${DAY_STRING}Test.kt"
-echo "        assertEquals(0, answer)" >> "$TEST_DIR/Day${DAY_STRING}Test.kt"
-echo "    }\n\n" >> "$TEST_DIR/Day${DAY_STRING}Test.kt"
+test_content="package nl.medsko
 
-echo "    @Test\n    fun \`Answer part 1\`() {" >> "$TEST_DIR/Day${DAY_STRING}Test.kt"
-echo "        val answer = subject.partOne(getRealInputForDay(${DAY}))" >> "$TEST_DIR/Day${DAY_STRING}Test.kt"
-echo "        println(\"Answer to part one: \$answer\")" >> "$TEST_DIR/Day${DAY_STRING}Test.kt"
-echo "        assertEquals(0, answer)" >> "$TEST_DIR/Day${DAY_STRING}Test.kt"
-echo "    }\n" >> "$TEST_DIR/Day${DAY_STRING}Test.kt"
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
-echo "    @Test\n    fun \`Example part 2\`() {" >> "$TEST_DIR/Day${DAY_STRING}Test.kt"
-echo "        val answer = subject.partTwo(getTestInputForDay(${DAY}))" >> "$TEST_DIR/Day${DAY_STRING}Test.kt"
-echo "        println(\"Example answer to part two: \$answer\")" >> "$TEST_DIR/Day${DAY_STRING}Test.kt"
-echo "        assertEquals(0, answer)" >> "$TEST_DIR/Day${DAY_STRING}Test.kt"
-echo "    }\n\n" >> "$TEST_DIR/Day${DAY_STRING}Test.kt"
+class Day${FORMATTED_DAY}Test {
 
-echo "    @Test\n    fun \`Answer part 2\`() {" >> "$TEST_DIR/Day${DAY_STRING}Test.kt"
-echo "        val answer = subject.partTwo(getRealInputForDay(${DAY}))" >> "$TEST_DIR/Day${DAY_STRING}Test.kt"
-echo "        println(\"Answer to part two: \$answer\")" >> "$TEST_DIR/Day${DAY_STRING}Test.kt"
-echo "        assertEquals(0, answer)" >> "$TEST_DIR/Day${DAY_STRING}Test.kt"
-echo "    }\n" >> "$TEST_DIR/Day${DAY_STRING}Test.kt"
+    private val subject = Day${FORMATTED_DAY}()
 
+    @Test
+    fun \`Example part 1\`() {
+        val answer = subject.partOne(getTestInputForDay(${DAY_NUMBER}))
+        println(\"Example answer to part one: \$answer\")
+        assertEquals(0, answer)
+    }
 
-echo "}" >> "$TEST_DIR/Day${DAY_STRING}Test.kt"
+    @Test
+    fun \`Answer part 1\`() {
+        val answer = subject.partOne(getRealInputForDay(${DAY_NUMBER}))
+        println(\"Answer to part one: \$answer\")
+        assertEquals(0, answer)
+    }
 
+    @Test
+    fun \`Example part 2\`() {
+        val answer = subject.partTwo(getTestInputForDay(${DAY_NUMBER}))
+        println(\"Example answer to part two: \$answer\")
+        assertEquals(0, answer)
+    }
+
+    @Test
+    fun \`Answer part 2\`() {
+        val answer = subject.partTwo(getRealInputForDay(${DAY_NUMBER}))
+        println(\"Answer to part two: \$answer\")
+        assertEquals(0, answer)
+    }
+
+}"
+
+create_kotlin_file "$MAIN_KOTLIN_DIR/Day${FORMATTED_DAY}.kt" "$kotlin_content"
+create_kotlin_file "$TEST_KOTLIN_DIR/Day${FORMATTED_DAY}Test.kt" "$test_content"
+
+input_file_1="$INPUT_RESOURCES_DIR/day${FORMATTED_DAY}.txt"
+input_file_2="$INPUT_RESOURCES_DIR/example/day${FORMATTED_DAY}.txt"
+create_input_file "$input_file_1"
+create_input_file "$input_file_2"
 
 # TODO: add to git
