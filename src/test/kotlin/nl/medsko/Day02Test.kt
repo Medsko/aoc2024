@@ -34,6 +34,7 @@ class Day02Test {
     fun `Answer part 2`() {
         val answer = subject.partTwo(getRealInputForDay(2))
         println("Answer to part two: $answer")
+        // 341 - too low
         assertEquals(0, answer)
     }
 
