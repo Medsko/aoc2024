@@ -50,6 +50,8 @@ class Day${FORMATTED_DAY} {
 
 test_content="package nl.medsko
 
+import nl.medsko.util.getRealInputForDay
+import nl.medsko.util.getTestInputForDay
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
