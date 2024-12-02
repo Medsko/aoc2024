@@ -1,5 +1,9 @@
 package nl.medsko.util
 
+const val SYMBOL_REGEX = "[^.\\d]"
+const val SINGLE_DIGIT_REGEX = "\\d"
+const val NUMBER_REGEX = "\\d+"
+
 fun printGrid(grid: List<CharArray>, positions: MutableList<Pair<Int, Int>>) {
     val red = "\u001b[31m"
     // Resets previous color codes
