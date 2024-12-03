@@ -1,0 +1,27 @@
+-- First one implied wrong direction, only to be discovered at index 2
+Incorrectly evaluated report: [57, 54, 55, 57, 59, 61]
+
+-- First one implied wrong direction, only to be discovered at index 2
+Incorrectly evaluated report: [85, 86, 85, 82, 79]
+
+-- Second to last one implied wrong direction, only to be discovered at index 2
+Incorrectly evaluated report: [75, 77, 79, 84, 81]
+
+-- Error at index 4 (retry should exclude index 3, 4)
+Unsafe report [75, 77, 79, 84, 81]! Previous value 84, current 81 - current is not bigger than previous
+-- Error at index 3 (retry should exclude index 2, 3)
+Unsafe report [75, 77, 79, 84, 81]! Previous value 79, current 84 represent difference of 5
+
+-- Index 4 removed
+Unsafe report [75, 77, 79, 84]! Previous value 79, current 84 represent difference of 5
+-- Index 2 removed
+Unsafe report [75, 77, 84, 81]! Previous value 84, current 81 - current is not bigger than previous
+Unsafe report [75, 77, 84, 81]! Previous value 77, current 84 represent difference of 7
+Report still unsafe after removing current unsafe level at index 3 and previous index. Report: [75, 77, 79, 84, 81]
+
+
+Incorrectly evaluated report: [88, 86, 88, 90, 91, 94]
+Incorrectly evaluated report: [32, 29, 26, 22, 23]
+Incorrectly evaluated report: [75, 78, 75, 73, 70]
+Incorrectly evaluated report: [30, 32, 35, 37, 39, 42, 46, 45]
+Incorrectly evaluated report: [91, 94, 93, 92, 90]

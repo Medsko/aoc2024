@@ -3,6 +3,7 @@ package nl.medsko
 import nl.medsko.util.getRealInputForDay
 import nl.medsko.util.getTestInputForDay
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class Day02Test {
@@ -24,10 +25,25 @@ class Day02Test {
     }
 
     @Test
+    fun `Part 2 specific cases`() {
+
+        val reports = listOf(
+            listOf(6, 5, 6, 7, 9)
+        )
+
+        for (report in reports) {
+            if (!subject.isSafePartTwo(report)) {
+                println("Incorrectly deemed unsafe report: $report!!!")
+            }
+            assertTrue(subject.isSafePartTwo(report))
+        }
+    }
+
+    @Test
     fun `Example part 2`() {
         val answer = subject.partTwo(getTestInputForDay(2))
         println("Example answer to part two: $answer")
-        assertEquals(0, answer)
+        assertEquals(4, answer)
     }
 
     @Test
@@ -35,7 +51,7 @@ class Day02Test {
         val answer = subject.partTwo(getRealInputForDay(2))
         println("Answer to part two: $answer")
         // 341 - too low
-        assertEquals(0, answer)
+        assertEquals(349, answer)
     }
 
 }

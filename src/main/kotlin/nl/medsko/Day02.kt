@@ -14,28 +14,25 @@ class Day02 {
     fun partTwo(input: List<String>): Int {
         val safeReportCount = input.map(this::parseReport)
             .count { isSafePartTwo(it) }
-
         return safeReportCount
     }
 
-    private fun isSafePartTwo(report: List<Int>): Boolean {
-        var unsafeLevelIndex = findUnsafeLevelIndex(report)
+    fun isSafePartTwo(report: List<Int>): Boolean {
+        val unsafeLevelIndex = findUnsafeLevelIndex(report)
         if (unsafeLevelIndex == -1) return true
 
-        // Try again, removing current unsafe level.
-        val removedCurrentUnsafe = report.toMutableList()
-        removedCurrentUnsafe.removeAt(unsafeLevelIndex)
-        unsafeLevelIndex = findUnsafeLevelIndex(removedCurrentUnsafe)
-        if (unsafeLevelIndex == -1) return true
+        for (i in 0..2) {
+            // Try again, removing unsafe level. This could go back two indices, e.g. in report [6, 5, 6, 7, 9]
+            if (unsafeLevelIndex - i < 0) continue
+            val removedCurrentUnsafe = report.toMutableList()
+            removedCurrentUnsafe.removeAt(unsafeLevelIndex - i)
+            val retryUnsafeLevelIndex = findUnsafeLevelIndex(removedCurrentUnsafe)
+            if (retryUnsafeLevelIndex == -1) return true
+        }
 
-        // Try again, removing previous unsafe level.
-        val removedPreviousUnsafe = report.toMutableList()
-        removedPreviousUnsafe.removeAt(unsafeLevelIndex - 1)
-        unsafeLevelIndex = findUnsafeLevelIndex(removedPreviousUnsafe)
+        println("Report still unsafe after removing current unsafe level at index $unsafeLevelIndex and previous 2 indices. Report: $report")
 
-        println("Report still unsafe after removing current unsafe level at index $unsafeLevelIndex and previous index. Report: $report")
-
-        return unsafeLevelIndex == -1
+        return false
     }
 
     private fun findUnsafeLevelIndex(report: List<Int>): Int {
@@ -56,7 +53,6 @@ class Day02 {
         var previous = report[0]
         var current = report[1]
         if (previous == current) {
-            println("First value $previous is same as second value $current. Report: $report")
             return 1
         }
         val increasing = previous < current
@@ -65,8 +61,6 @@ class Day02 {
             previous = current
             current = report[i]
             if (!isConsistentWithDirection(current, previous, increasing)) {
-                val direction = if (increasing) "bigger" else "smaller"
-                println("Unsafe report $report! Previous value $previous, current $current - current is not $direction than previous")
                 return i
             }
         }
@@ -81,7 +75,6 @@ class Day02 {
         for (i in 1..<report.size) {
             val difference = abs(report[i-1] - report[i])
             if (difference > 3) {
-                println("Unsafe report $report! Previous value ${report[i-1]}, current ${report[i]} represent difference of $difference")
                 return i
             }
         }
@@ -90,5 +83,35 @@ class Day02 {
     }
 
     private fun parseReport(line: String) = NUMBER_REGEX.toRegex().findAll(line).map { it.value.toInt() }.toList()
+
+//    fun findIncorrectEvaluations(input: List<String>) {
+//        val reports = input.map(this::parseReport)
+//        val incorrectReports = mutableListOf<List<Int>>()
+//
+//        for (report in reports) {
+//            if (isSafePartTwo(report) != isSafePartTwoBruteForce(report)) incorrectReports.add(report)
+//        }
+//
+//        println("${incorrectReports.count()} incorrectly evaluated reports were found.")
+//        println("Re-evaluating reports now")
+//        println()
+//
+//        for (report in incorrectReports) {
+//            println("Incorrectly evaluated report: $report")
+//            isSafePartTwo(report)
+//        }
+//    }
+//
+//    fun isSafePartTwoBruteForce(report: List<Int>): Boolean {
+//        val unsafeLevelIndex = findUnsafeLevelIndex(report)
+//        if (unsafeLevelIndex == -1) return true
+//
+//        for (i in report.indices) {
+//            val modifiedReport = report.toMutableList()
+//            modifiedReport.removeAt(i)
+//            if (findUnsafeLevelIndex(modifiedReport) == -1) return true
+//        }
+//        return false
+//    }
 
 }
