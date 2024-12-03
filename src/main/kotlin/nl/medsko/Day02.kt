@@ -2,6 +2,7 @@ package nl.medsko
 
 import nl.medsko.util.NUMBER_REGEX
 import kotlin.math.abs
+import kotlin.math.sign
 
 class Day02 {
 
@@ -21,65 +22,41 @@ class Day02 {
         val unsafeLevelIndex = findUnsafeLevelIndex(report)
         if (unsafeLevelIndex == -1) return true
 
-        for (i in 0..2) {
-            // Try again, removing unsafe level. This could go back two indices, e.g. in report [6, 5, 6, 7, 9]
-            if (unsafeLevelIndex - i < 0) continue
+        // Try again, removing unsafe level. The fault could lie with the current index, or the one preceding or following it.
+        for (i in -1..1) {
+            if (unsafeLevelIndex + i < 0) continue
             val removedCurrentUnsafe = report.toMutableList()
-            removedCurrentUnsafe.removeAt(unsafeLevelIndex - i)
+            removedCurrentUnsafe.removeAt(unsafeLevelIndex + i)
             val retryUnsafeLevelIndex = findUnsafeLevelIndex(removedCurrentUnsafe)
             if (retryUnsafeLevelIndex == -1) return true
         }
 
-        println("Report still unsafe after removing current unsafe level at index $unsafeLevelIndex and previous 2 indices. Report: $report")
-
         return false
     }
 
-    private fun findUnsafeLevelIndex(report: List<Int>): Int {
-        val inconsistentDirectionIndex = isIncreasingOrDecreasing(report)
-        val unsafeDifferenceIndex = hasSafeDifferences(report)
-
-        return listOf(inconsistentDirectionIndex, unsafeDifferenceIndex).find { it > 0 } ?: -1
-    }
-
     private fun isSafe(report: List<Int>): Boolean {
-        val inconsistentDirectionIndex = isIncreasingOrDecreasing(report)
-        val unsafeDifferenceIndex = hasSafeDifferences(report)
-
-        return inconsistentDirectionIndex < 0 && unsafeDifferenceIndex < 0
+        return findUnsafeLevelIndex(report) == -1
     }
 
-    private fun isIncreasingOrDecreasing(report: List<Int>): Int {
-        var previous = report[0]
-        var current = report[1]
-        if (previous == current) {
-            return 1
-        }
-        val increasing = previous < current
+    private fun findUnsafeLevelIndex(report: List<Int>): Int {
+        val direction = getDirection(report[0], report[1])
+        if (direction == 0) return 0
 
-        for (i in 2..<report.size) {
-            previous = current
-            current = report[i]
-            if (!isConsistentWithDirection(current, previous, increasing)) {
-                return i
-            }
+        for (i in 0..<report.size - 1) {
+            val currentValue = report[i]
+            val nextValue = report[i + 1]
+
+            val difference = abs(currentValue - nextValue)
+            if (difference < 1 || difference > 3) return i
+
+            if (direction != getDirection(currentValue, nextValue)) return i
         }
 
         return -1
     }
 
-    private fun isConsistentWithDirection(current: Int, previous: Int, increasing: Boolean) =
-        if (increasing) current > previous else current < previous
-
-    private fun hasSafeDifferences(report: List<Int>): Int {
-        for (i in 1..<report.size) {
-            val difference = abs(report[i-1] - report[i])
-            if (difference > 3) {
-                return i
-            }
-        }
-
-        return -1
+    private fun getDirection(first: Int, second: Int): Int {
+        return (second - first).sign
     }
 
     private fun parseReport(line: String) = NUMBER_REGEX.toRegex().findAll(line).map { it.value.toInt() }.toList()
