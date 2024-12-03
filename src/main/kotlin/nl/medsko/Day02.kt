@@ -84,34 +84,4 @@ class Day02 {
 
     private fun parseReport(line: String) = NUMBER_REGEX.toRegex().findAll(line).map { it.value.toInt() }.toList()
 
-//    fun findIncorrectEvaluations(input: List<String>) {
-//        val reports = input.map(this::parseReport)
-//        val incorrectReports = mutableListOf<List<Int>>()
-//
-//        for (report in reports) {
-//            if (isSafePartTwo(report) != isSafePartTwoBruteForce(report)) incorrectReports.add(report)
-//        }
-//
-//        println("${incorrectReports.count()} incorrectly evaluated reports were found.")
-//        println("Re-evaluating reports now")
-//        println()
-//
-//        for (report in incorrectReports) {
-//            println("Incorrectly evaluated report: $report")
-//            isSafePartTwo(report)
-//        }
-//    }
-//
-//    fun isSafePartTwoBruteForce(report: List<Int>): Boolean {
-//        val unsafeLevelIndex = findUnsafeLevelIndex(report)
-//        if (unsafeLevelIndex == -1) return true
-//
-//        for (i in report.indices) {
-//            val modifiedReport = report.toMutableList()
-//            modifiedReport.removeAt(i)
-//            if (findUnsafeLevelIndex(modifiedReport) == -1) return true
-//        }
-//        return false
-//    }
-
 }
